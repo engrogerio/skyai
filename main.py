@@ -87,7 +87,3 @@ async def evaluate_sky(image_url: str = Query(..., description="Direct URL to a 
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=f"Error from OpenAI API: {str(e)}")
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True, host="0.0.0.0", port=80)
-
