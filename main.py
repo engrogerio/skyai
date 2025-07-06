@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import FileResponse
 import openai
 import requests
 import base64
@@ -36,7 +37,13 @@ Also include an overall_score as the average of the five categories.
 Return only the raw JSON object, with no commentary, formatting, or explanation.
 """
 
-@app.get("/evaluate-sky/")
+favicon_path = 'favicon.ico'
+
+@app.get('/favicon.ico', include_in_schema=False)
+async def favicon():
+    return FileResponse(favicon_path)
+
+@app.get("/")
 async def evaluate_sky(image_url: str = Query(..., description="Direct URL to a sky image")):
     """
     Evaluate this image of the sky for planetary observation suitability. Based on visual analysis, return a JSON object with scores from 1 to 5 for the following:
@@ -82,5 +89,5 @@ async def evaluate_sky(image_url: str = Query(..., description="Direct URL to a 
         raise HTTPException(status_code=500, detail=f"Error from OpenAI API: {str(e)}")
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True, host="0.0.0.0", port=5000)
+    uvicorn.run("main:app", reload=True, host="0.0.0.0", port=80)
 
